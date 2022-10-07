@@ -27,18 +27,6 @@ jobs:
         uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Installation du provider Microsoft.App
-        run: |
-          az extension add --name containerapp --upgrade
-          az provider register --namespace Microsoft.App
-          az provider register --namespace Microsoft.OperationalInsights
-
-      - name: Creation du "Resource Group"
-        run: |
-          az group create \
-            --name ${{ env.RESOURCE_GROUP }} \
-            --location ${{ env.LOCATION }}
       
       - name: Create "MySQL Server"
         run: |
