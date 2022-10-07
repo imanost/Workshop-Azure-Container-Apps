@@ -5,7 +5,7 @@ on:
 
 env:
   RESOURCE_GROUP: "RG-YMA"
-  LOCATION: "westeaurope"
+  LOCATION: "westeurope"
   CONTAINERAPPS_ENVIRONMENT: "imane-environment-lab-3"
   LOG_ANALYTICS_NAME: "imane-workspace-lab-3"
   ACR_NAME: "acrlabimanelab3"
