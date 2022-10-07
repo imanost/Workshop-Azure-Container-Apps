@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  RESOURCE_GROUP: "RG-YMA"
+  RESOURCE_GROUP: "RG-YMAN"
   LOCATION: "westeurope"
   CONTAINERAPPS_ENVIRONMENT: "imane-environment-lab-3"
   LOG_ANALYTICS_NAME: "imane-workspace-lab-3"
@@ -27,9 +27,28 @@ jobs:
         uses: azure/login@24848bc889cfc0a8313c2b3e378ac0d625b9bc16
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-     
 
+      - name: Installation du provider Microsoft.App
+        run: |
+          az extension add --name containerapp --upgrade
+          az provider register --namespace Microsoft.App
+          az provider register --namespace Microsoft.OperationalInsights
+      - name: Creation du "Resource Group"
+        run: |
+          az group create \
+            --name ${{ env.RESOURCE_GROUP }} \
+            --location ${{ env.LOCATION }}
+      
+      - name: Create "MySQL Server"
+        run: |
+          az mysql server create \
+            --location ${{ env.LOCATION }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --name ${{ env.DB_HOST_NAME }} \
+            --admin-user ${{ env.DB_ADMIN }} \
+            --admin-password ${{ env.DB_ADMIN_PASSWORD }} \
+            --sku-name GP_Gen5_2 \
+            --ssl-enforcement Disabled
       - name: Create Environnment "Azure Container Apps" 
         run: |
           az monitor log-analytics workspace create \
@@ -38,14 +57,12 @@ jobs:
             --location ${{ env.LOCATION }}
           LOG_ANALYTICS_WORKSPACE_CLIENT_ID=`az monitor log-analytics workspace show --query customerId -g ${{ env.RESOURCE_GROUP }} -n ${{ env.LOG_ANALYTICS_NAME }} --out tsv`
           LOG_ANALYTICS_WORKSPACE_PRIMARY_KEY=`az monitor log-analytics workspace get-shared-keys --query primarySharedKey -g ${{ env.RESOURCE_GROUP }} -n ${{ env.LOG_ANALYTICS_NAME }} --out tsv`
-          az config set extension.use_dynamic_install=yes_without_prompt \
           az containerapp env create \
             --name ${{ env.CONTAINERAPPS_ENVIRONMENT }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --location ${{ env.LOCATION }} \
             --logs-workspace-id $LOG_ANALYTICS_WORKSPACE_CLIENT_ID \
             --logs-workspace-key $LOG_ANALYTICS_WORKSPACE_PRIMARY_KEY
-        
       - name: Create "Azure Container Registry"
         run: |
           az acr create \
@@ -53,7 +70,6 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --admin-enabled true \
             --sku basic
-
       - name: Create "MySQL Server" firewall rule
         run: |
           az mysql server firewall-rule create \
@@ -62,14 +78,12 @@ jobs:
             --start-ip-address 0.0.0.0 \
             --end-ip-address 255.255.255.255 \
             --name allowip
-
       - name: Create "Data Base"
         run: |
           az mysql db create \
             --name ${{ env.DB_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --server-name ${{ env.DB_HOST_NAME }}
-
       - name: Create "Table"
         uses: azure/mysql@093f3af08a63a1d99485a1d93d3771b684625875
         with:
