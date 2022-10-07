@@ -4,18 +4,15 @@ on:
   workflow_dispatch:
 
 env:
-  RESOURCE_GROUP: "RG-Lab3"
-  LOCATION: "eastus2"
-  CONTAINERAPPS_ENVIRONMENT: "environment-lab-3"
-  LOG_ANALYTICS_NAME: "pierrc-workspace-lab-3"
-  ACR_NAME: "acrlab3xxx"
-  ##################################################################################################################################################################################
-  # Nous sommes dans un Workshop !                                                                                                                                                 #
-  # Dans les bonnes pratiques, toutes la informations liées à la base de données sont à mettre dans un service pour stocker les secrets (ex: service secrets GitHub, KeyVault, ...)#
-  DB_HOST_NAME: "DB-lab-3-xxx"                                                                                                                                                     #
-  DB_NAME: "rugby_api" # ne pas modifier                                                                                                                                           #
-  DB_ADMIN: "pierrc"                                                                                                                                                               #
-  DB_ADMIN_PASSWORD: Password123$                                                                                                                                                  #
+  RESOURCE_GROUP: "RG-YMA"
+  LOCATION: "westeaurope"
+  CONTAINERAPPS_ENVIRONMENT: "imane-environment-lab-3"
+  LOG_ANALYTICS_NAME: "imane-workspace-lab-3"
+  ACR_NAME: "acrlabimanelab3"
+  DB_HOST_NAME: "DB-lab-3-imane"
+  DB_NAME: "rugby_api" # ne pas modifier
+  DB_ADMIN: "imane"
+  DB_ADMIN_PASSWORD: Password123$                                                                                                                                                 #
   ##################################################################################################################################################################################
 
 jobs:
