@@ -44,7 +44,7 @@ jobs:
             --location ${{ env.LOCATION }} \
             --logs-workspace-id $LOG_ANALYTICS_WORKSPACE_CLIENT_ID \
             --logs-workspace-key $LOG_ANALYTICS_WORKSPACE_PRIMARY_KEY
-    - name: Create "Azure Container Registry"
+      - name: Create "Azure Container Registry"
         run: |
           az acr create \
             --name ${{ env.ACR_NAME }} \
